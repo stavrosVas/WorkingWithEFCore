@@ -8,6 +8,7 @@ public class NorthwindDb : DbContext
     // These two properties map to tables in the database.
     public DbSet<Category>? Categories { get; set; }
     public DbSet<Product>? Products { get; set; }
+    public DbSet<Supplier>? Suppliers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -46,6 +47,16 @@ public class NorthwindDb : DbContext
             modelBuilder.Entity<Product>()
               .Property(product => product.Cost)
               .HasConversion<double>();
+
+            // To "fix" the lack of decimal support in SQLite.
+            modelBuilder.Entity<Supplier>()
+              .Property(supplier => supplier.Phone)
+              .HasConversion<double>();
+
+            // To "fix" the lack of decimal support in SQLite.
+            //modelBuilder.Entity<Supplier>()
+            //  .Property(supplier => supplier.Fax)
+            //  .HasConversion<double>();
         }
         // A global filter to remove discontinued products.
         modelBuilder.Entity<Product>()

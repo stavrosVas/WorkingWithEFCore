@@ -29,4 +29,9 @@ public class Product
     // to the Categories table.
     public int CategoryId { get; set; }
     public virtual Category Category { get; set; } = null!;
+
+    // These two properties define the foreign key relationship
+    // to the Categories table.
+    public int SupplierId { get; set; }
+    public virtual Supplier Supplier { get; set; } = null!;
 }

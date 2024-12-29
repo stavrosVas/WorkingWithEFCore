@@ -4,71 +4,71 @@ using Microsoft.EntityFrameworkCore.ChangeTracking; // To use CollectionEntry.
 
 partial class Program
 {
-    private static void QueryingCategories()
+    private static void QueryingSuppliers()
     {
         // Data context will be disposed at the end of the method.
         using NorthwindDb db = new();
 
-        SectionTitle("Categories and how many products they have");
+        SectionTitle("Suppliers and how many products they have");
 
         // A query to get all categories and their related products.
-        IQueryable<Category>? categories = db.Categories;//?.Include(c => c.Products);
-        if (categories is null || !categories.Any())
+        IQueryable<Supplier>? suppliers = db.Suppliers?.Include(c => c.Products);
+        if (suppliers is null || !suppliers.Any())
         {
-            Fail("No categories found.");
+            Fail("No suppliers found.");
             return;
         }
         // Execute query and enumerate results.
-        foreach (Category c in categories)
+        foreach (Supplier c in suppliers)
         {
-            WriteLine($"{c.CategoryName} has {c.Products.Count} products.");
-        }
-    
-        db.ChangeTracker.LazyLoadingEnabled = false;
-
-            Write("Enable eager loading? (Y/N): ");
-        bool eagerLoading = (ReadKey().Key == ConsoleKey.Y);
-        bool explicitLoading = false;
-        WriteLine();
-
-            if (eagerLoading)
-            {
-                categories = db.Categories?.Include(c => c.Products);
-        }
-            else
-        {
-        categories = db.Categories;
-        Write("Enable explicit loading? (Y/N): ");
-        explicitLoading = (ReadKey().Key == ConsoleKey.Y);
-        WriteLine();
+            WriteLine($"{c.Name} has {c.Products.Count} products.");
         }
 
-        if (categories is null || !categories.Any())
-        {
-        Fail("No categories found.");
-        return;
-        }
+        //db.ChangeTracker.LazyLoadingEnabled = false;
 
-        // Execute query and enumerate results.
-        foreach (Category c in categories)
-        {
-        if (explicitLoading)
-        {
-            Write($"Explicitly load products for {c.CategoryName}? (Y/N): ");
-            ConsoleKeyInfo key = ReadKey();
-            WriteLine();
+        //Write("Enable eager loading? (Y/N): ");
+        //bool eagerLoading = (ReadKey().Key == ConsoleKey.Y);
+        //bool explicitLoading = false;
+        //WriteLine();
 
-            if (key.Key == ConsoleKey.Y)
-            {
-                CollectionEntry<Category, Product> products =
-                    db.Entry(c).Collection(c2 => c2.Products);
+        //if (eagerLoading)
+        //{
+        //    categories = db.Categories?.Include(c => c.Products);
+        //}
+        //else
+        //{
+        //    categories = db.Categories;
+        //    Write("Enable explicit loading? (Y/N): ");
+        //    explicitLoading = (ReadKey().Key == ConsoleKey.Y);
+        //    WriteLine();
+        //}
 
-                if (!products.IsLoaded) products.Load();
-            }
-        }
+        //if (categories is null || !categories.Any())
+        //{
+        //    Fail("No categories found.");
+        //    return;
+        //}
 
-        WriteLine($"{c.CategoryName} has {c.Products.Count} products.");
-        }
+        //// Execute query and enumerate results.
+        //foreach (Category c in categories)
+        //{
+        //    if (explicitLoading)
+        //    {
+        //        Write($"Explicitly load products for {c.CategoryName}? (Y/N): ");
+        //        ConsoleKeyInfo key = ReadKey();
+        //        WriteLine();
+
+        //        if (key.Key == ConsoleKey.Y)
+        //        {
+        //            CollectionEntry<Category, Product> products =
+        //                db.Entry(c).Collection(c2 => c2.Products);
+
+        //            if (!products.IsLoaded) products.Load();
+        //        }
+        //    }
+
+        //    WriteLine($"{c.CategoryName} has {c.Products.Count} products.");
+        //}
     }
 
     private static void FilteredIncludes()
